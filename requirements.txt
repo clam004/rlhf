@@ -1,4 +1,7 @@
+datasets
 ipywidgets
 jupyterlab
+matplotlib
 torch
 transformers
+tqdm
