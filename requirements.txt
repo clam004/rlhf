@@ -1,0 +1,4 @@
+ipywidgets
+jupyterlab
+torch
+transformers
