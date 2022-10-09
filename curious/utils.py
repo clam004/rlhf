@@ -149,3 +149,157 @@ def respond_to_batch(model, queries, txt_len=20, top_k=0, top_p=1.0):
         next_token = torch.multinomial(probs, num_samples=1).squeeze(1)
         input_ids = torch.cat([input_ids, next_token.unsqueeze(-1)], dim=-1)
     return input_ids[:, -txt_len:]
+
+
+def convo_list_dic2list_str(
+  conversation_list_dic,
+  human_symbol = '[H]: ',
+  bot_symbol = '[B]: ',
+  utterance_delimiter = '\n',
+):
+
+  """ This function takes a list of dictionaries
+  and turns them into a list of speaker_symbol + utterance strings
+
+  Args: 
+      conversation_list_dic (List[Dict]): 
+      ie: [{'speaker': 'bot', 'utterance': 'im waking up!'},
+           {'speaker': 'human', 'utterance': 'wakey wakey sleepyhead'}, ...]
+
+  Returns:
+      conversation_list_str (List[str]): list of speaker_symbol + utterance strings
+      ie: ['\n[C]: Hello Fara.','\n[A]: Hello! How are you doing today?',...]
+  """
+
+  speaker2symbol = {
+      'bot':bot_symbol,
+      'human':human_symbol,
+  }
+
+  conversation_list_str = list()
+
+  for u in conversation_list_dic:
+
+      speaker_symbol = speaker2symbol[u['speaker']]
+      utterance = end_punctuation(u['utterance'])
+
+      conversation_list_str.append(utterance_delimiter + speaker_symbol + utterance)
+
+  # Elicit next agent utterance
+  conversation_list_str.append(utterance_delimiter + bot_symbol)
+
+  return conversation_list_str
+
+
+def generate_extract_replies(
+    model,
+    tokenizer,
+    prompt,
+    max_gen_len = 16, 
+    no_repeat_ngram_size = None,
+    pad_token_id = 50256,
+    do_sample = True,
+    top_k = 100, 
+    top_p = 0.99, 
+    num_return_sequences = 1,
+    temperature = 0.9,
+    stop_strings = [
+        '<',
+        '[human]',
+        '\n',
+        '[',
+    ],
+    verbose = False,
+):
+
+    ''' This function predicts the next utterance
+    in a conversation
+    '''
+
+    gen_texts = generate_text(
+        model,
+        tokenizer,
+        prompt,
+        max_gen_len = max_gen_len, 
+        no_repeat_ngram_size = no_repeat_ngram_size,
+        pad_token_id = pad_token_id,
+        do_sample = do_sample,
+        top_k = top_k, 
+        top_p = top_p, 
+        num_return_sequences = num_return_sequences,
+        temperature = temperature,
+        verbose = verbose,
+    )
+
+    replies = [
+        extract_str(
+            gen_text,
+            prefix = prompt,
+            stop_strings = stop_strings,
+            verbose = verbose,
+        )
+        for gen_text in gen_texts
+    ]
+
+    return replies
+
+
+def generate_text(
+    model,
+    tokenizer,
+    prompt,
+    max_gen_len = 16, 
+    no_repeat_ngram_size = None,
+    pad_token_id = 50256,
+    do_sample = True,
+    top_k = 100, 
+    top_p = 0.99, 
+    num_return_sequences = 1,
+    temperature = 0.9,
+    verbose = False,
+):
+
+    ''' function for generating text from an input into 
+    the app.package model
+
+    prompt (str): text to be tokenized and pushed through model
+
+    if you are doing few shot detection you should leave 
+    no_repeat_ngram_size = None and max_len = 16
+    as long as the default max_len is more than the expected
+    label text
+
+    we leave it up to the label extractor to clip of the portion
+    of the generated text that you need
+    '''
+    NUM_GPUS = torch.cuda.device_count()
+
+    prompt_dic = tokenizer(prompt,return_tensors="pt")
+    prompt_ids = prompt_dic.input_ids
+    prompt_mask = prompt_dic.attention_mask
+    prompt_len = prompt_ids.shape[1]
+
+    if verbose:
+        print('prompt_ids.shape', prompt_ids.shape)
+        print('prompt_mask.shape', prompt_mask.shape)
+
+    if NUM_GPUS > 0:
+        prompt_ids = prompt_ids.to(model.device)
+        prompt_mask = prompt_mask.to(model.device)
+
+    output_ids = model.generate(
+        prompt_ids,
+        attention_mask = prompt_mask,
+        max_length = prompt_len + max_gen_len,
+        no_repeat_ngram_size = no_repeat_ngram_size,
+        pad_token_id = pad_token_id,
+        do_sample = do_sample,
+        top_k = top_k, 
+        top_p = top_p, 
+        num_return_sequences = num_return_sequences,
+        temperature = temperature,
+    )
+
+    generated_text = tokenizer.batch_decode(output_ids)
+
+    return generated_text
