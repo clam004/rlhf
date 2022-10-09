@@ -1,3 +1,25 @@
+# compiled bytecode
+*.pyc
+
+# Environments
+**/*env
+**/env_*
+env_fara/
+.env
+**/.env*
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+**/.ipynb_checkpoints
+
+# Mac
+**/.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
