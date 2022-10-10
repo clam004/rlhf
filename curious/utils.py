@@ -131,6 +131,8 @@ def build_bert_batch_from_txt(text_list, tokenizer, device):
 
 class LengthSampler:
     """
+    This object when called, returns a
+    randomly selected integer in [min_value,max_value)
     """
     def __init__(self, min_value, max_value):
         self.values = list(range(min_value, max_value))
