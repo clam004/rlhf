@@ -56,7 +56,6 @@ def logprobs_from_logits(logits, labels):
     logpy = torch.gather(logp, 2, labels.unsqueeze(2)).squeeze(-1)
     return logpy
 
-
 def whiten(values, shift_mean=True):
     """Whiten values."""
     mean, var = torch.mean(values), torch.var(values)
@@ -78,7 +77,6 @@ def entropy_from_logits(logits):
     pd = torch.nn.functional.softmax(logits, dim=-1)
     entropy = torch.logsumexp(logits, axis=-1) - torch.sum(pd*logits, axis=-1)
     return entropy
-
 
 def average_torch_dicts(list_of_dicts):
     """Average values of a list of dicts wiht torch tensors."""
@@ -128,7 +126,6 @@ def build_bert_batch_from_txt(text_list, tokenizer, device):
     
     return padded_tensors, attention_masks
 
-
 class LengthSampler:
     """
     This object when called, returns a
@@ -138,7 +135,6 @@ class LengthSampler:
         self.values = list(range(min_value, max_value))
     def __call__(self):
         return np.random.choice(self.values)
-
 
 def respond_to_batch(model, queries, txt_len=20, top_k=0, top_p=1.0):
     """Sample text from language model."""
@@ -153,7 +149,6 @@ def respond_to_batch(model, queries, txt_len=20, top_k=0, top_p=1.0):
         next_token = torch.multinomial(probs, num_samples=1).squeeze(1)
         input_ids = torch.cat([input_ids, next_token.unsqueeze(-1)], dim=-1)
     return input_ids[:, -txt_len:]
-
 
 def convo_list_dic2list_str(
   conversation_list_dic,
@@ -193,7 +188,6 @@ def convo_list_dic2list_str(
   conversation_list_str.append(utterance_delimiter + bot_symbol)
 
   return conversation_list_str
-
 
 def generate_extract_replies(
     model,
@@ -246,7 +240,6 @@ def generate_extract_replies(
     ]
 
     return replies
-
 
 def generate_text(
     model,
