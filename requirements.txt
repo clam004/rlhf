@@ -3,6 +3,7 @@ datasets
 ipywidgets
 jupyterlab
 matplotlib
+scikit-learn
 transformers
 tqdm
 --extra-index-url https://download.pytorch.org/whl/cu113
