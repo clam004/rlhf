@@ -19,7 +19,7 @@ from torch.optim import Adam
 
 from transformers import DataCollatorForLanguageModeling
 
-from curious.utils import (
+from rlhf.utils import (
     logprobs_from_logits,
     whiten,
     clip_by_value,
