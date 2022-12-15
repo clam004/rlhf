@@ -2,6 +2,7 @@
 *.pyc
 
 # Environments
+venv/
 **/*env
 **/env_*
 env_fara/
@@ -9,7 +10,6 @@ env_fara/
 **/.env*
 .venv
 env/
-venv/
 ENV/
 env.bak/
 venv.bak/
