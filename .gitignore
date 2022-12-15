@@ -1,3 +1,6 @@
+# dont save large folders of data into git
+**/large_data/
+
 # compiled bytecode
 *.pyc
 
