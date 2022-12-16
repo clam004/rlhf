@@ -9,10 +9,10 @@ you@you chat-api % source venv/bin/activate
 (venv) you@you chat-api % pip install -r requirements.txt
 ```
 
-### what directories are consuming the most memory
+### what directories or files are using the most disk memory
 
 `df -h`
-
+`ls -alh *`
 `du --max-depth=2 --human-readable /home/ | sort --human-numeric-sort`
 
 ### the torch version must match the CUDA version on your machine
