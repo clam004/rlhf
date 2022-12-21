@@ -42,6 +42,30 @@ CUDA version 11.1
 
 `pip install --upgrade torch==1.9.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html`
 
+### Huggingface Hub
+
+You need this to use huggingface push_to_hub
+
+`wget https://github.com/git-lfs/git-lfs/releases/download/v2.9.0/git-lfs-linux-amd64-v2.9.0.tar.gz`
+
+and follow http://arfc.github.io/manual/guides/git-lfs
+
+```
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ wget https://github.com/git-lfs/git-lfs/releases/download/v2.9.0/git-lfs-linux-amd64-v2.9.0.tar.gz
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ ls
+Commonsense-Dialogues  git-lfs-linux-amd64-v2.9.0.tar.gz  ml_fara  modelstates
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ tar -xf git-lfs-linux-amd64-v2.9.0.tar.gz 
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ ls
+CHANGELOG.md  Commonsense-Dialogues  README.md  git-lfs  git-lfs-linux-amd64-v2.9.0.tar.gz  install.sh  ml_fara  modelstates
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ chmod 755 install.sh
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ sudo ./install.sh
+Git LFS initialized.
+(env_ds) ubuntu@104-171-202-32:~/farafiles$ cd ml_fara
+(env_ds) ubuntu@104-171-202-32:~/farafiles/ml_fara$ git lfs install
+Updated git hooks.
+Git LFS initialized.
+(env_ds) ubuntu@104-171-202-32:~/farafiles/ml_fara$ 
+```
 
 ### list processes using GPUs with 
 
