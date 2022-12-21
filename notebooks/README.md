@@ -11,9 +11,11 @@ you@you chat-api % source venv/bin/activate
 
 ### what directories or files are using the most disk memory
 
-`df -h`
-`ls -alh *`
-`du --max-depth=2 --human-readable /home/ | sort --human-numeric-sort`
+```
+df -h
+ls -alh *
+du --max-depth=2 --human-readable /home/ | sort --human-numeric-sort
+```
 
 ### the torch version must match the CUDA version on your machine
 
